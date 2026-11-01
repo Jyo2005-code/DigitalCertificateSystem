@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login - Digital Certificate System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="logo">🎓</div>
+
+            <h1>Admin Login</h1>
+
+            <p class="subtitle">
+                Digital Certificate Management System
+            </p>
+
+            {% with messages = get_flashed_messages() %}
+                {% for message in messages %}
+                    <div class="error">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+
+            <form method="POST">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ session['csrf_token'] }}">
+
+                <label>Email Address</label>
+
+                <input type="email"
+                       name="email"
+                       placeholder="Enter admin email"
+                       required>
+
+                <label>Password</label>
+
+                <div class="password-box">
+
+                    <input type="password"
+                           name="password"
+                           id="password"
+                           placeholder="Enter password"
+                           required>
+
+                    <button type="button"
+                            id="togglePassword">
+                        Show
+                    </button>
+
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Login to Dashboard
+                </button>
+
+            </form>
+
+            <p class="footer">
+                Authorized Admin Access Only
+            </p>
+
+        </div>
+
+    </div>
+
+    <script>
+        const password =
+            document.getElementById("password");
+
+        const toggle =
+            document.getElementById("togglePassword");
+
+        toggle.addEventListener("click", function() {
+
+            if (password.type === "password") {
+                password.type = "text";
+                toggle.textContent = "Hide";
+            } else {
+                password.type = "password";
+                toggle.textContent = "Show";
+            }
+
+        });
+    </script>
+
+</body>
+</html>

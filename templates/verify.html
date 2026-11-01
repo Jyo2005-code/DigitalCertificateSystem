@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Certificate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            padding: 30px;
+        }
+        .container {
+            max-width: 650px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+        h1 { color: #2353a0; }
+        .result {
+            background: #e6f5e9;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+        .not-found {
+            background: #ffe8e8;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        input, button {
+            padding: 11px;
+            margin-top: 10px;
+        }
+        input { width: 100%; box-sizing: border-box; }
+        button {
+            background: #2353a0;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        a { color: #2353a0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Certificate Verification</h1>
+
+    <form method="POST">
+        <label>Enter Certificate ID</label>
+        <input type="text" name="certificate_id"
+               placeholder="e.g. CERT-ABC1234567" required>
+        <button type="submit">Verify</button>
+    </form>
+
+    {% if certificate %}
+        <div class="result">
+            <h2>Certificate Found</h2>
+            <p><strong>Student:</strong> {{ certificate.student_name }}</p>
+            <p><strong>Course:</strong> {{ certificate.course_name }}</p>
+            <p><strong>Issue Date:</strong> {{ certificate.issue_date }}</p>
+            <p><strong>Certificate ID:</strong> {{ certificate.certificate_id }}</p>
+        </div>
+    {% elif request.method == "POST" %}
+        <div class="not-found">
+            Certificate not found. Please check the ID and try again.
+        </div>
+    {% endif %}
+
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+</div>
+</body>
+</html>

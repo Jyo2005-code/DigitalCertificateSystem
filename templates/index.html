@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Certificate System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            margin: 0;
+            padding: 30px;
+            color: #222;
+        }
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0001;
+        }
+        h1, h2 { color: #2353a0; }
+        input, button {
+            padding: 11px;
+            margin: 6px 0;
+            box-sizing: border-box;
+        }
+        input { width: 100%; }
+        button {
+            background: #2353a0;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .message { background: #e6f5e9; padding: 10px; }
+        .certificate {
+            border: 1px solid #ddd;
+            padding: 14px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+        a { color: #2353a0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="{{ url_for('admin_logout') }}"
+   style="
+       float: right;
+       background: #dc3545;
+       color: white;
+       padding: 10px 16px;
+       text-decoration: none;
+       border-radius: 5px;
+   ">
+    Logout
+</a>
+    <h1>Digital Certificate System</h1>
+    <p>Generate, manage, and verify digital certificates securely.</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+        <p class="message">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    <h2>Generate a Certificate</h2>
+    <form action="{{ url_for('generate') }}" method="POST">
+        <label>Student Name</label>
+        <input type="text" name="student_name" required>
+
+        <label>Course Name</label>
+        <input type="text" name="course_name" required>
+
+        <button type="submit">Generate Certificate</button>
+    </form>
+
+    <h2>Verify a Certificate</h2>
+    <form action="{{ url_for('verify') }}" method="POST">
+        <label>Certificate ID</label>
+        <input type="text" name="certificate_id"
+               placeholder="Enter certificate ID" required>
+        <button type="submit">Verify Certificate</button>
+    </form>
+
+    <h2>Saved Certificates</h2>
+    {% if certificates %}
+        {% for certificate in certificates %}
+            <div class="certificate">
+                <strong>{{ certificate.student_name }}</strong><br>
+                Course: {{ certificate.course_name }}<br>
+                Issue Date: {{ certificate.issue_date }}<br>
+                Certificate ID: {{ certificate.certificate_id }}
+                <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}">
+    <button type="button">Download PDF</button></a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No certificates generated yet.</p>
+    {% endif %}
+</div>
+</body>
+</html>

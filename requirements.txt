@@ -1,0 +1,8 @@
+Flask
+mysql-connector-python
+qrcode[pil]
+reportlab
+Pillow
+Werkzeug
+python-dotenv
+gunicorn
