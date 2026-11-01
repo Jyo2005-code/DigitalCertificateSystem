@@ -24,13 +24,16 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.environ.get("DB_HOST", "localhost"),
-        user=os.environ.get("DB_USER", "root"),
+        host=os.environ.get("DB_HOST"),
+        port=int(os.environ.get("DB_PORT")),
+        user=os.environ.get("DB_USER"),
         password=os.environ.get("DB_PASSWORD"),
-        database=os.environ.get(
-            "DB_NAME",
-            "digital_certificate_system"
-        )
+        database=os.environ.get("DB_NAME"),
+        ssl_ca=os.path.join(
+            app.root_path,
+            os.environ.get("DB_SSL_CA", "ca.pem")
+        ),
+        ssl_verify_cert=True
     )
 def admin_required(function):
 
@@ -169,7 +172,8 @@ def download_certificate(certificate_id):
 
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=(600, 842))
-    logo_image=Image.open(r"C:\Users\haris\OneDrive\Desktop\DigitalCertificateSystem\logo1.jpeg").convert("RGB")
+    logo_path = os.path.join(app.root_path, "logo1.jpeg")
+    logo_image= Image.open(logo_path)
     pdf.drawImage(
         ImageReader(logo_image),
         465,755,
@@ -230,13 +234,16 @@ def download_certificate(certificate_id):
 
     pdf.setFillColorRGB(0.08, 0.16, 0.32)
     pdf.setFont("Helvetica-Bold", 12)
+    signature_path = os.path.join(app.root_path, "signature.jpeg")
+
     pdf.drawImage(
-    "signature.jpeg",
+    signature_path,
     90, 180,
     width=130,
     height=40,
     preserveAspectRatio=True,
-    mask="auto")
+    mask="auto"
+)
     pdf.drawCentredString(155, 130, "Authorized Signature")
 
     pdf.setFillColorRGB(0, 0, 0)
