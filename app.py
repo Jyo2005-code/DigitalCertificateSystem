@@ -215,8 +215,10 @@ def download_certificate(certificate_id):
     pdf.setFont("Helvetica", 13)
     pdf.drawCentredString(300, 460, f"Issue Date: {certificate['issue_date']}")
     pdf.drawCentredString(300, 430, f"Certificate ID: {certificate['certificate_id']}")
-    qr = qrcode.make(
-    f"http://127.0.0.1:5000/verify?certificate_id={certificate['certificate_id']}")
+
+    PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL","https://digitalcertificatesystem-i9ce.onrender.com").rstrip("/")
+    verification_url = (f"{PUBLIC_BASE_URL}/verify?certificate_id="f"{certificate['certificate_id']}")
+    qr = qrcode.make(verification_url)
 
     qr_buffer = BytesIO()
     qr.save(qr_buffer, format="PNG")
